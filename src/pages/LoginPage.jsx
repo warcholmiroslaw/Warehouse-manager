@@ -3,6 +3,7 @@ import {Box, Button, Checkbox, Flex, HStack, Image, Link, Text} from "@chakra-ui
 import logo from "../images/logo.png";
 import InputField from "../components/InputField";
 import {useNavigate} from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 const LoginPage = () => {
 
@@ -29,41 +30,61 @@ const LoginPage = () => {
 
     return (
         <Flex
+            display="flex"
             justifyContent= "center"
             alignItems="center"
-            height="100vh"
-            width="100vw"
             bg="EDF0F2"
+            width="100vw"
+            height={{lg: "100vh"}}
+            minHeight="100vh"
+            padding={{base:8, md: 4, lg: 4}}
+            boxSizing="border-box"
         >
             <Flex
+                display="flex"
                 bg="white"
                 borderRadius="15"
-                width="95vw"
-                height="95vh"
-                justifyContent="center"
+                width="100%"
+                height={{lg: "100vh"}}
+                minHeight="100vh"
+                justifyContent= "center"
+                alignItems="center"
+                boxSizing="border-box"
             >
                 <HStack spacing={0}
+                        display="flex"
                         width="100%"
-                        marginLeft={8}
-                        marginRight={8}
+                        justifyContent={{base: "center", md: "center", lg: "center"}}
+                        alignItems="center"
+                        padding={{base:0, md: 0, lg: 8}}
+                        flexWrap={{base: "wrap", md: "wrap", lg: "nowrap"}}
+                        boxSizing="border-box"
 
                 >
+                    <Image src={logo}
+                           display="flex"
+                           justifyContent="center"
+                           alignItems="center"
+                           width={{base:"100%", md: "70%", lg: "100%"}}
+                           padding={{base: 8, md: 4, lg: 2}}
+                           boxSizing="border-box"
+                    ></Image>
+
                     <Box
                         display="flex"
-                        flexDirection="column"
                         width="100%"
-                        height="100%"
                         padding={4}
+                        marginLeft={{base: 0, md:8, lg: 20}}
+                        flexDirection="column"
                         justifyContent="center"
                         alignItems="left"
                         >
 
                         {/*head of login section*/}
                         <Flex
-                            display="block"
                             flexDirection="column"
-                            justifyContent="center"
-                            alignItems="center"
+                            justifyContent="left"
+                            alignItems="left"
                         >
                             <Box boxSize = {10}
                                  bg="#FFC30D">
@@ -88,10 +109,10 @@ const LoginPage = () => {
 
                         {/*Input and buttons*/}
                         <Flex display = "flex"
-                              justifyContent="center"
-                            flexDirection="column"
+                                flexDirection="column"
                                 paddingTop = {8}
-                                width = "70%">
+                                width = {{base: '90%', md: '80%', lg: '70%'}}
+                        >
 
                             {inputFields.map((field, index) => (
                                 <InputField
@@ -108,9 +129,9 @@ const LoginPage = () => {
                             ))}
 
                             <Flex
-                                flexDirection="row"
+                                flexDirection={{base:"column", md:"row", lg:"row"}}
                                 justifyContent="space-between"
-                                paddingTop={6}
+                                paddingTop={{base:2, md:4, lg:8}}
                             >
 
                                 <Checkbox
@@ -127,6 +148,7 @@ const LoginPage = () => {
                                     fontSize="md"
                                     fontWeight="bold"
                                     color="#101540"
+                                    paddingTop={{base:2, md:0, lg:0}}
                                 >
                                     Forgot password?
 
@@ -136,18 +158,20 @@ const LoginPage = () => {
                             <Button
                                 bg="#101540"
                                 borderRadius={10}
-                                marginTop={8}
+                                marginTop={{base:2, md:6, lg:8}}
                                 color="white"
                             >
                                 Login
                             </Button>
 
                             <Text
-                                padding={4}>
+                                paddingTop={{base: 2, md: 4, lg: 6}}
+                            >
                                 Not registered yet? {" "}
                                 <Link
+                                    as={RouterLink}
+                                    to="/register"
                                     variant="underline"
-                                    href="https://chakra-ui.com"
                                     color="#101540"
                                     fontWeight="bold"
                                 >
@@ -158,16 +182,8 @@ const LoginPage = () => {
                         </Flex>
 
                     </Box>
-
-                    <Image src={logo}
-                        justifyContent="center"
-                           alignItems="center"
-                           display="flex"
-                           width="100%"
-                    ></Image>
                 </HStack>
         </Flex>
-
         </Flex>
     )
 }
