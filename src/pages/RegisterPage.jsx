@@ -4,26 +4,22 @@ import logo from "../images/logo.png";
 import InputField from "../components/InputField";
 import {useNavigate} from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
+import {signup} from "../services/authService";
 
 
 const RegisterPage = () => {
 
 
     const [formData, setFormData] = useState({
-        firstname: "",
-        lastname: "",
-        phone: "",
         email: "",
         password: "",
 
     });
 
     const inputFields = [
-        {name: "First name", type: "text", placeholder: "Enter first name", isRequired: true },
-        {name: "Surname name", type: "text", placeholder: "Enter first name", isRequired: true },
-        {name: "Phone", type: "phone", placeholder: "Enter phone", isRequired: true },
         { name: "email", type: "email", placeholder: "Enter email", isRequired: true },
         { name: "password", type: "password", placeholder: "Enter password", isRequired: true },
+        { name: "Confirm password", type: "password", placeholder: "Confirm password", isRequired: true },
     ];
 
     const navigate = useNavigate();
@@ -34,6 +30,17 @@ const RegisterPage = () => {
             ...prevData,
             [name]: value,
         }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const token = await signup(formData);
+            console.log("Registered! Token:", token);
+            navigate("/login");
+        } catch (error) {
+            console.error("Registration failed:", error);
+        }
     };
 
     return (
@@ -56,6 +63,7 @@ const RegisterPage = () => {
                 height="100%"
                 boxSizing="border-box"
             >
+
                 <HStack spacing={0}
                         display="flex"
                         justifyContent="center"
@@ -63,15 +71,9 @@ const RegisterPage = () => {
                         boxSizing="border-box"
 
                 >
-                    <Image src={logo}
-                           display="flex"
-                           justifyContent="center"
-                           alignItems="center"
-                           width={["100%", "100%", "50%"]}
-                           margin={{base: 8}}
-                           boxSizing="border-box"
-                    ></Image>
-
+                    <Image
+                        src={logo}
+                    />
 
                     <Box
                         display="flex"
@@ -88,7 +90,7 @@ const RegisterPage = () => {
                             justifyContent="center"
                             alignItems="center"
                         >
-                            <Box boxSize = {10}
+                            <Box boxSize={10}
                                  bg="#FFC30D">
 
                             </Box>
@@ -121,81 +123,83 @@ const RegisterPage = () => {
                         </Flex>
 
                         {/*Input and buttons*/}
-                        <Flex display = "flex"
-                              flexDirection= {{base: "column", md: "column", lg: "row"}}
-                              flexWrap="wrap"
-                              paddingTop = {8}
-                              boxSizing="border-box"
-                        >
+                        <form onSubmit={handleSubmit}>
+                            <Flex display="flex"
+                                  flexDirection={{base: "column", md: "column", lg: "row"}}
+                                  flexWrap="wrap"
+                                  paddingTop={8}
+                                  boxSizing="border-box"
+                            >
 
-                            {inputFields.map((field, index) => (
-                                <Box width={{base: "100%", md: "70%", lg: "50%"}}
-                                     key={index}
-                                     padding={2}
-                                >
-                                    <InputField
-                                        key={index}
-                                        name={field.name}
-                                        label={field.name}
-                                        type={field.type}
-                                        placeholder={field.placeholder}
-                                        onChange={handleChange}
-                                        isRequired={field.isRequired}
+                                {inputFields.map((field, index) => (
+                                    <Box width={{base: "100%", md: "70%", lg: "50%"}}
+                                         key={index}
+                                         padding={2}
                                     >
+                                        <InputField
+                                            key={index}
+                                            name={field.name}
+                                            label={field.name}
+                                            type={field.type}
+                                            placeholder={field.placeholder}
+                                            onChange={handleChange}
+                                            isRequired={field.isRequired}
+                                        >
 
-                                    </InputField>
-                                </Box>
-                            ))}
-
-
-                        </Flex>
-                        <Flex display = "flex"
-                              justifyContent="center"
-                              flexDirection="column"
-                              paddingTop = {2}
-                              width = "100%"
-                        boxSizing="border-box">
-
-                            <Checkbox
-                                variant="subtle"
-                                colorPalette="green"
-                                borderColor="#8F8F8F"
-                                colorScheme="green"
-                                borderRadius={1}
-                                size = "md"
-                                paddingTop={2}
-                            >
-                                I agree all terms, privacy policies, and fees
-                            </Checkbox>
+                                        </InputField>
+                                    </Box>
+                                ))}
 
 
-                            <Button
-                                bg="#101540"
-                                borderRadius={10}
-                                marginTop={4}
-                                padding={8}
-                                color="white"
-                            >
-                                Sign up
-                            </Button>
+                            </Flex>
+                            <Flex display="flex"
+                                  justifyContent="center"
+                                  flexDirection="column"
+                                  paddingTop={2}
+                                  width="100%"
+                                  boxSizing="border-box">
 
-                            <Text
-                                padding={4}>
-                                Already have account? {" "}
-                                <Link
-                                    as={RouterLink}
-                                    to="/login"
-                                    variant="underline"
-                                    href="https://chakra-ui.com"
-                                    color="#101540"
-                                    fontWeight="bold"
+                                <Checkbox
+                                    variant="subtle"
+                                    colorPalette="green"
+                                    borderColor="#8F8F8F"
+                                    colorScheme="green"
+                                    borderRadius={1}
+                                    size="md"
+                                    paddingTop={2}
                                 >
-                                    Log in
-                                </Link>
-                            </Text>
+                                    I agree all terms, privacy policies, and fees
+                                </Checkbox>
 
-                        </Flex>
 
+                                <Button
+                                    type="submit"
+                                    bg="#101540"
+                                    borderRadius={10}
+                                    marginTop={4}
+                                    padding={8}
+                                    color="white"
+                                >
+                                    Sign up
+                                </Button>
+
+                                <Text
+                                    padding={4}>
+                                    Already have account? {" "}
+                                    <Link
+                                        as={RouterLink}
+                                        to="/login"
+                                        variant="underline"
+                                        href="https://chakra-ui.com"
+                                        color="#101540"
+                                        fontWeight="bold"
+                                    >
+                                        Log in
+                                    </Link>
+                                </Text>
+
+                            </Flex>
+                        </form>
                     </Box>
                 </HStack>
             </Flex>

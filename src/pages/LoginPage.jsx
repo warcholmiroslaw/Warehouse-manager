@@ -4,6 +4,7 @@ import logo from "../images/logo.png";
 import InputField from "../components/InputField";
 import {useNavigate} from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
+import { login } from "../services/authService";
 
 const LoginPage = () => {
 
@@ -26,6 +27,17 @@ const LoginPage = () => {
             ...prevData,
             [name]: value,
         }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const token = await login(formData);
+            console.log("Logged in! Token:", token);
+            navigate("/dashboard");
+        } catch (error) {
+            console.error("Login failed:", error);
+        }
     };
 
     return (
@@ -108,6 +120,7 @@ const LoginPage = () => {
                         </Flex>
 
                         {/*Input and buttons*/}
+                        <form onSubmit={handleSubmit}>
                         <Flex display = "flex"
                                 flexDirection="column"
                                 paddingTop = {8}
@@ -156,6 +169,7 @@ const LoginPage = () => {
                             </Flex>
 
                             <Button
+                                type = "submit"
                                 bg="#101540"
                                 borderRadius={10}
                                 marginTop={{base:2, md:6, lg:8}}
@@ -163,6 +177,7 @@ const LoginPage = () => {
                             >
                                 Login
                             </Button>
+
 
                             <Text
                                 paddingTop={{base: 2, md: 4, lg: 6}}
@@ -180,7 +195,7 @@ const LoginPage = () => {
                             </Text>
 
                         </Flex>
-
+                        </form>
                     </Box>
                 </HStack>
         </Flex>
