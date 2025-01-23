@@ -13,13 +13,15 @@ const RegisterPage = () => {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
+        confirmPassword: "",
+        roleId: 2
 
     });
 
     const inputFields = [
         { name: "email", type: "email", placeholder: "Enter email", isRequired: true },
         { name: "password", type: "password", placeholder: "Enter password", isRequired: true },
-        { name: "Confirm password", type: "password", placeholder: "Confirm password", isRequired: true },
+        { name: "confirmPassword", type: "password", placeholder: "Confirm password", isRequired: true },
     ];
 
     const navigate = useNavigate();
@@ -34,12 +36,20 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const token = await signup(formData);
-            console.log("Registered! Token:", token);
+
+        if (formData.password !== formData.confirmPassword) {
+            console.error("Passwords do not match!");
+            return;
+        }
+
+        const result = await signup(formData);
+
+        if (result.success) {
+            console.log('Signup successful, token:', result.token);
             navigate("/login");
-        } catch (error) {
-            console.error("Registration failed:", error);
+        } else {
+            console.error('Signup failed:', result.message);
+            alert(result.message);
         }
     };
 
