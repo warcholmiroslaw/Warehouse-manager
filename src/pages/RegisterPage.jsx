@@ -9,8 +9,10 @@ import {signup} from "../services/authService";
 
 const RegisterPage = () => {
 
-
+    // send to server
     const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -18,10 +20,22 @@ const RegisterPage = () => {
 
     });
 
+    // errors state for inputs
+    const [errors, setErrors] = useState({
+        firstName: false,
+        lastName: false,
+        email: false,
+        password: false,
+        confirmPassword: false
+    });
+
+    // inputs configuration
     const inputFields = [
-        { name: "email", type: "email", placeholder: "Enter email", isRequired: true },
-        { name: "password", type: "password", placeholder: "Enter password", isRequired: true },
-        { name: "confirmPassword", type: "password", placeholder: "Confirm password", isRequired: true },
+        { name: "firstName", type: "text", placeholder: "Enter name", isRequired: true},
+        { name: "lastName", type: "text", placeholder: "Enter lastname", isRequired: true},
+        { name: "email", type: "email", placeholder: "Enter email", isRequired: true},
+        { name: "password", type: "password", placeholder: "Enter password", isRequired: true},
+        { name: "confirmPassword", type: "password", placeholder: "Confirm password", isRequired: true},
     ];
 
     const navigate = useNavigate();
@@ -32,23 +46,38 @@ const RegisterPage = () => {
             ...prevData,
             [name]: value,
         }));
+
+        // Reset error when user types
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: false,
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (formData.password !== formData.confirmPassword) {
-            console.error("Passwords do not match!");
+
+        const newErrors = {
+            email: !formData.email,
+            password: !formData.password,
+            confirmPassword: formData.password !== formData.confirmPassword
+        };
+
+        setErrors(newErrors);
+
+        // If there are errors, stop form submission
+        if (Object.values(newErrors).some((error) => error)) {
             return;
         }
 
         const result = await signup(formData);
 
         if (result.success) {
-            console.log('Signup successful, token:', result.token);
+            console.log('Sign up successful');
             navigate("/login");
         } else {
-            console.error('Signup failed:', result.message);
+            console.error('Sign up failed:', result.message);
             alert(result.message);
         }
     };
@@ -154,6 +183,16 @@ const RegisterPage = () => {
                                             placeholder={field.placeholder}
                                             onChange={handleChange}
                                             isRequired={field.isRequired}
+                                            isInvalid={errors[field.name]}
+                                            errorMessage={
+                                                field.name === "confirmPassword" && errors.confirmPassword
+                                                    ? "Passwords do not match"
+                                                    : field.name === "email" && errors.email
+                                                        ? "Email is required"
+                                                        : field.name === "password" && errors.password
+                                                            ? "Password is required"
+                                                            : ""
+                                            }
                                         >
 
                                         </InputField>

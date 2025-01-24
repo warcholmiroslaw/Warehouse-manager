@@ -31,12 +31,14 @@ const LoginPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const token = await login(formData);
-            console.log("Logged in! Token:", token);
-            navigate("/dashboard");
-        } catch (error) {
-            console.error("Login failed:", error);
+
+        const result = await login(formData);
+        if (result.success) {
+            console.log('Login successfully');
+            navigate("/products");
+        } else {
+            console.error('Login failed:', result.message);
+            alert(result.message);
         }
     };
 
